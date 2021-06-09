@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use ImageResize;
 
 class EventImageController extends APIController
 {
@@ -310,12 +311,13 @@ class EventImageController extends APIController
 
 
             $image = $request->file('collage');            
-            $input['imagename'] = time().'.'.$image->extension();
+            $input['imagename'] = time().$image->getClientOriginalName();
          
             $destinationPath = $thumbnailpath;
             $img = ImageResize::make($image->path());
-            $img->resize(100, 100, function ($constraint) {
+            $img->resize(200, 250, function ($constraint) {
                 $constraint->aspectRatio();
+                $constraint->upsize();
             })->save($destinationPath.'/'.$input['imagename']);
        
             $imagePath = $path;
@@ -324,7 +326,8 @@ class EventImageController extends APIController
 
 
             $collagedata  = EventImage::insert( [
-                'image'        =>  $input['imagename'],
+                'image'        => $input['imagename'],
+                'thumbnail'    => $input['imagename'],
                 'event_id'     => $request->event_id,
                 'type'         =>'collage',
                 'layout_id'    =>$request->layout_id,
@@ -350,13 +353,28 @@ class EventImageController extends APIController
         //$images=array();
         if($files=$request->file('image')){
             foreach($files as $key => $file){
-                $filename    = time().$file->getClientOriginalName();               
-                $data        = $file->move($path, $filename);
+                //$filename    = time().$file->getClientOriginalName();               
+                //$data        = $file->move($path, $filename);
+
+
+
+                $input['imagename'] = time().$file->getClientOriginalName();
+             
+                $destinationPath = $thumbnailpath;
+                $img = ImageResize::make($file->path());
+                $img->resize(200, 250, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })->save($destinationPath.'/'.$input['imagename']);
+           
+                $imagePath = $path;
+                $file->move($imagePath, $input['imagename']);
                
                 //$images[]=$name;
 
                 $insertdata =  EventImage::insert( [
-                                                    'image'        =>  $filename,
+                                                    'image'        =>  $input['imagename'],
+                                                    'thumbnail'    => $input['imagename'],
                                                     'event_id'     =>$request->event_id,
                                                     'image_text'   =>$imagetext[$key],
                                                     'type'         =>'image',

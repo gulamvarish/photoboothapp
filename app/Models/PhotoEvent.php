@@ -60,7 +60,8 @@ class PhotoEvent extends BaseModel
 
 
     public function event_owner() {
-       return $this->hasMany('App\Models\EventImage', 'event_id')->where('type', 'image');
+       //return $this->hasMany('App\Models\EventImage', 'event_id')->where('type', 'image');
+       return $this->hasMany('App\Models\EventImage', 'event_id');
     }
 
 

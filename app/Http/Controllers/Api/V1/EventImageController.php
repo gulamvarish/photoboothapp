@@ -53,7 +53,7 @@ class EventImageController extends APIController
             }else{
                   
 
-                $response['event_image']          = url('/').'/storage/img/event/eventimage'; 
+                $response['event_image']      = url('/').'/storage/img/event/eventimage'; 
                 $response['status']           = true;
                 $response['message']          = 'Event Image Detail Found Successfully';
                 $response['data']             = $eventimagesdetail;

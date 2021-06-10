@@ -17,6 +17,17 @@
     $status = array('0'=>'Inactive', '1'=>'Active');
 
 ?><?php //echo "<pre>";print_r($PhotoEvents); echo "<pre>"; die(); ?>
+
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"/>
+<link href="{{ asset('css/socialpic.min.css') }}" rel="stylesheet" type="text/css">
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+    
+    .overlay i {
+    font-size: 12px;
+}
+</style>
+
         <div class="row mt-4">
             <div class="col">
                 <div class="table-responsive">
@@ -33,6 +44,7 @@
                                              @if(isset($PhotoEventdata->event_owner) && $PhotoEventdata->event_owner !='')
                                                @foreach ($PhotoEventdata->event_owner as $key => $imagedata)
                                                 <img src="{{ asset('/storage/img/event/eventimage/'.$imagedata->image)}}" style=" width: 100px; margin-right: 15px; margin-top: 15px">
+                                                
                                                @endforeach
                                              @endif
 
@@ -61,4 +73,5 @@
     <!--card-body-->
 </div>
 <!--card-->
+
 @endsection

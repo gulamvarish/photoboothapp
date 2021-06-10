@@ -57,5 +57,12 @@
         @stack('after-scripts')
 
         @include('includes.partials.ga')
+       
+<script src="{{ asset('js/social/socialpic.js') }}"></script>
+<script>
+    $(function(){       
+        $('img').socialpic();
+    });
+    </script>
     </body>
 </html>

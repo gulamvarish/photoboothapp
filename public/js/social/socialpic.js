@@ -88,14 +88,16 @@ $.fn.socialpic = function(opts){
 
 $(function(){
 	$('body').on('click', 'span.socialclick', function(){
-			var url = $(this).closest('div.wrap').find('img').attr('src');
+			var url       = $(this).closest('div.wrap').find('img').attr('downloadurl');
+			var fullurl   = $(this).closest('div.wrap').find('img').attr('downloadurl');
+			var imagename = $(this).closest('div.wrap').find('img').attr('name');
 
 			if($(this).hasClass('facebook-share')){
-				window.open('https://www.facebook.com/sharer/sharer.php?u='+url, 'Share Facebook', config='height=300, width=500');
+				window.open('https://www.facebook.com/sharer/sharer.php?u='+url, 'Share Facebook');
 			}
 
 			if($(this).hasClass('twitter-share')){
-				window.open('http://twitter.com/home?status=Currently inspired by '+url, 'Share Twitter', config='height=300, width=500');
+				window.open('http://twitter.com/share?url='+url, 'Share Twitter', config='height=300, width=500');
 			}
 
 			if($(this).hasClass('google-share')){
@@ -109,8 +111,8 @@ $(function(){
 			if($(this).hasClass('download')){
 
 				var a = document.createElement('a');
-					a.href = url;
-					a.download = url;
+					a.href = fullurl;
+					a.download = imagename;
 					document.body.appendChild(a);
 					a.click();
 					document.body.removeChild(a);

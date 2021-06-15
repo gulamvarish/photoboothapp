@@ -18,15 +18,7 @@
 
 ?><?php //echo "<pre>";print_r($PhotoEvents); echo "<pre>"; die(); ?>
 
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"/>
-<link href="{{ asset('css/socialpic.min.css') }}" rel="stylesheet" type="text/css">
-<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-<style type="text/css">
-    
-    .overlay i {
-    font-size: 12px;
-}
-</style>
+
 
         <div class="row mt-4">
             <div class="col">
@@ -40,14 +32,8 @@
                                    @foreach ($PhotoEvents as $key => $PhotoEventdata)
 
                                     <tr>
-                                            <td style="max-width: 100%;display: flex;flex-wrap: wrap;"><h4 style="width: 100%;">{{$PhotoEventdata->event_title}}</h4><br>
-                                             @if(isset($PhotoEventdata->event_owner) && $PhotoEventdata->event_owner !='')
-                                               @foreach ($PhotoEventdata->event_owner as $key => $imagedata)
-                                                <img src="{{ asset('/storage/img/event/eventimage/'.$imagedata->image)}}" style=" width: 100px; margin-right: 15px; margin-top: 15px">
-                                                
-                                               @endforeach
-                                             @endif
-
+                                            <td style="max-width: 100%;display: flex;flex-wrap: wrap;"><h4 class="titleevent"><a href="event-gallery/{{$PhotoEventdata->id}}"> {{$PhotoEventdata->event_title}}</a></h4><a href="event-gallery/{{$PhotoEventdata->id}}" class="btn viewbtn">View Gallery</a>
+                                             
                                             </td> 
 
                                            

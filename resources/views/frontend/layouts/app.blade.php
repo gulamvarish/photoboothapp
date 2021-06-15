@@ -22,6 +22,22 @@
         {{ style(mix('css/backend.css')) }}
 
         @stack('after-styles')
+
+        <!-- For sociall -->
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"/>
+        <link href="{{ asset('css/socialpic.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/jquerysctipttop.css') }}" rel="stylesheet" type="text/css">
+        <style type="text/css">
+            
+            .overlay i {
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .titleevent{ width: 85%; }
+        .viewbtn{ background: #20a8d8; color: #fff; }
+        </style>
+        <!-- For sociall -->
     </head>
    <body class="app header-fixed sidebar-fixed aside-menu-off-canvas sidebar-lg-show">
         @include('includes.partials.read-only')

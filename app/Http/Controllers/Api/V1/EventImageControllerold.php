@@ -72,61 +72,7 @@ class EventImageController extends APIController
 
 
 
-        /*For Single Image*/
-
-        $eventimagesdetail = DB::table('event_images')           
-        ->where('id', '=', $image_id)->where('type', '=', 'image') 
-        ->get()->toArray();
-
-     
-        
-        foreach ($eventimagesdetail as $key => &$event) {
-          $comment = DB::table('event_image_comments')           
-                    ->where('event_image_id', '=', $event->id) 
-                    ->get();
-
-         /*For user name*/
-
-            $users = DB::table('users')           
-                    ->where('id', '=', $event->created_by) 
-                    ->first();
-             
-            $event->user_name = $users->first_name." ".$users->last_name;
-
-        /*end For user name*/
-
-        
-
-          $event->commentcount = $comment->count();
-
-          $likes = DB::table('event_image_like')           
-                    ->where('event_image_id', '=', $event->id) 
-                    ->get();
-
-          $event->likecount = $likes->count();
-
-          $userlike = DB::table('event_image_like')           
-                    ->where('user_id', '=', $user_id)->where('event_image_id', '=', $image_id)                     
-                    ->get();
-
-                   
-
-             if(!empty($userlike[0]->user_id) && $userlike[0]->user_id == $user_id)
-             {
-
-                $event->is_user_liked = true;
-
-            }else{
-                $event->is_user_liked = false;
-            }         
-
-          
-        }
-
-        /*For user name*/
-
-        /*Nested Comment*/
-
+         
         /*For comment Detail*/
 
          $commentdetail = DB::table('event_image_comments')           
@@ -169,8 +115,7 @@ class EventImageController extends APIController
                         /*For current userlike*/
 
                         $is_user_like = DB::table('event_image_comment_like')           
-                        ->where('user_id', '=', $user_id)
-                        ->where('comment_id', '=', $commentdata1->id) 
+                        ->where('user_id', '=', $user_id) 
                         ->get();
                         
                         if(!empty($is_user_like[0]->user_id) && $is_user_like[0]->user_id == $user_id){
@@ -209,25 +154,97 @@ class EventImageController extends APIController
 
          /*For current userlike*/
 
-            $is_user_like = DB::table('event_image_comment_like')           
-            ->where('user_id', '=', $user_id)->where('event_image_id', '=', $image_id)->where('comment_id', '=', $commentdata->id) 
-            ->get();
-            
-            if(!empty($is_user_like[0]->user_id) && $is_user_like[0]->user_id == $user_id){
+                        $is_user_like = DB::table('event_image_comment_like')           
+                        ->where('user_id', '=', $user_id) 
+                        ->get();
+                        
+                        if(!empty($is_user_like[0]->user_id) && $is_user_like[0]->user_id == $user_id){
 
-                $commentdata->is_user_like = true;
-            }else{
-                $commentdata->is_user_like = false;
-            }
+                            $commentdata->is_user_like = true;
+                        }else{
+                            $commentdata->is_user_like = false;
+                        }
 
-        /*End For current userlike*/
+                        /*End For current userlike*/
 
           
 
-        
+         /*$userlike = DB::table('event_image_like')           
+                    ->where('event_image_id', '=', $event->id) 
+                    ->where('user_id', '=', $user_id) 
+                    ->get();
+
+          $event->is_user_liked = $userlike->count();*/
         }
     }
         
+           
+
+
+
+        /*For Single Image*/
+
+        $eventimagesdetail = DB::table('event_images')           
+        ->where('id', '=', $image_id)->where('type', '=', 'image') 
+        ->get()->toArray();
+
+        //print_r($eventimagesdetail);
+
+
+        
+
+            
+
+        
+        foreach ($eventimagesdetail as $key => &$event) {
+          $comment = DB::table('event_image_comments')           
+                    ->where('event_image_id', '=', $event->id) 
+                    ->get();
+
+
+
+         /*For user name*/
+
+            $users = DB::table('users')           
+                    ->where('id', '=', $event->created_by) 
+                    ->first();
+             
+            $event->user_name = $users->first_name." ".$users->last_name;
+
+        /*end For user name*/
+
+        
+
+          $event->commentcount = $comment->count();
+
+          $likes = DB::table('event_image_like')           
+                    ->where('event_image_id', '=', $event->id) 
+                    ->get();
+
+          $event->likecount = $likes->count();
+
+          $userlike = DB::table('event_image_like')           
+                    ->where('user_id', '=', $user_id)                     
+                    ->get();
+
+                   
+
+             if(!empty($userlike[0]->user_id) && $userlike[0]->user_id == $user_id)
+             {
+
+                $event->is_user_liked = true;
+
+            }else{
+                $event->is_user_liked = false;
+            }         
+
+          
+        }
+
+        /*For user name*/
+
+            
+
 
         
             if(empty($eventimagesdetail)){
@@ -238,7 +255,7 @@ class EventImageController extends APIController
             }else{
                   
 
-                $response['event_image']      = url('/').'/storage/img/event/eventimage'; 
+                $response['event_image']          = url('/').'/storage/img/event/eventimage'; 
                 $response['status']           = true;
                 $response['message']          = 'Event Image Detail Found Successfully';
                 $response['data']             = $eventimagesdetail;
@@ -524,7 +541,7 @@ class EventImageController extends APIController
 
     public function comment_update(Request $request, $id)
     {
-        $this->validate($request, [
+    	$this->validate($request, [
             'event_image_id'   => 'required',
             'photo_events_id'  => 'required',
             'comment_text'     => 'required',
@@ -535,8 +552,8 @@ class EventImageController extends APIController
            
 
                          $updatedata =  DB::table('event_image_comments')
-                                                  ->where('id', $id)
-                                                  ->update([
+									              ->where('id', $id)
+									              ->update([
                                                     'event_image_id'      => $request->event_image_id,
                                                     'photo_events_id'     => $request->photo_events_id,
                                                     'comment_text'        => $request->comment_text,
@@ -561,7 +578,7 @@ class EventImageController extends APIController
     public function comment_delete($id)
     {
 
-        $deletedata = DB::table('event_image_comments')->where('id', $id)->delete();
+    	$deletedata = DB::table('event_image_comments')->where('id', $id)->delete();
 
                   if($deletedata){
                       $response['comment'] = true;
@@ -586,21 +603,6 @@ class EventImageController extends APIController
             'user_id'          => 'required',
             'liked'            => 'required'
         ]);
-
-
-        $eventimagelike = DB::table('event_image_like')           
-            ->where('photo_events_id', '=', $request->photo_events_id)
-            ->where('event_image_id', '=', $request->event_image_id)             
-            ->where('user_id', '=', $request->user_id)
-            ->get();
-
-
-            if($eventimagelike->count()>0 && $request->liked=="liked"){
-
-                      $response['like'] = "You are already like Image"; 
-
-            }else{ 
-            
 
            if($request->liked=="liked"){
                  $likedata =  DB::table('event_image_like')->insert([
@@ -659,17 +661,9 @@ class EventImageController extends APIController
                     ->where('user_id', '=', $request->user_id) 
                     ->get();
 
-
-            if($userlike->count()>0){
-                $event->is_user_liked = true;
-            }else{
-                 $event->is_user_liked = false;
-            }
+          $event->is_user_liked = $userlike->count();
         }
-        $response['event_image']      = url('/').'/storage/img/event/eventimage';
         $response['data']             = $eventimagesdetail;
-
-        }
         return $response;        
         
     }
@@ -688,65 +682,67 @@ class EventImageController extends APIController
             'liked'            => 'required'
         ]);
 
+           if($request->liked=="liked"){
+                 $likedata =  DB::table('event_image_comment_like')->insert([
+                                'photo_events_id'     => $request->photo_events_id,
+                                'event_image_id'      => $request->event_image_id,
+                                'comment_id'          => $request->comment_id,
+                                'user_id'             => $request->user_id  
+                                
+                            ]);
 
-        $eventimagecommentlike = DB::table('event_image_comment_like')           
-            ->where('photo_events_id', '=', $request->photo_events_id)
-            ->where('event_image_id', '=', $request->event_image_id)
-            ->where('comment_id', '=', $request->comment_id) 
-            ->where('user_id', '=', $request->user_id)
-            ->get();
+                if($likedata){
+                      $response['like'] = true;
+                      $response['like_message'] = 'Liked Successfully';
+                  }else{
 
-            
-            
-
-            if($eventimagecommentlike->count()>0 && $request->liked=="liked"){
-
-                      $response['like'] = "You are already like comment";                      
-
-            }else{
-
-            
-
-                if($request->liked=="liked"){
-                         $likedata =  DB::table('event_image_comment_like')->insert([
-                                        'photo_events_id'     => $request->photo_events_id,
-                                        'event_image_id'      => $request->event_image_id,
-                                        'comment_id'          => $request->comment_id,
-                                        'user_id'             => $request->user_id  
-                                        
-                                    ]); 
-
-                        if($likedata){
-                              $response['like'] = true;
-                              $response['like_message'] = 'Liked Successfully';
-                          }else{
-
-                              $response['like'] = false;
-                              $response['like_status'] = 'Liked Not Successfully';
-                          }
-                }elseif($request->liked=="unliked"){
+                      $response['like'] = false;
+                      $response['like_status'] = 'Liked Not Successfully';
+                  }
+        }elseif($request->liked=="unliked"){
 
 
-                   $deletedata = DB::table('event_image_comment_like')->where('event_image_id', $request->event_image_id)->where('comment_id', $request->comment_id)->delete();
+           $deletedata = DB::table('event_image_comment_like')->where('event_image_id', $request->event_image_id)->where('user_id', $request->user_id)->delete();
 
-                      if($deletedata){
-                          $response['like'] = true;
-                          $response['like_message'] = 'Unliked Successfully';
-                      }else{
+              if($deletedata){
+                  $response['like'] = true;
+                  $response['like_message'] = 'Unliked Successfully';
+              }else{
 
-                          $response['like'] = false;
-                          $response['like_status'] = 'Unliked Not Successfully';
-                      }
+                  $response['like'] = false;
+                  $response['like_status'] = 'Unliked Not Successfully';
+              }
 
 
-
-                }
 
         }
 
-
+        /*$eventimagesdetail = DB::table('event_images')           
+            ->where('event_id', '=', $request->photo_events_id)->where('type', '=', 'image') 
+            ->get()->toArray();
 
         
+        foreach ($eventimagesdetail as $key => &$event) {
+          $comment = DB::table('event_image_comments')           
+                    ->where('event_image_id', '=', $event->id) 
+                    ->get();
+
+          $event->commentcount = $comment->count();
+
+          $likes = DB::table('event_image_like')           
+                    ->where('event_image_id', '=', $event->id) 
+                    ->get();
+
+          $event->likecount = $likes->count();
+
+          $userlike = DB::table('event_image_like')           
+                    ->where('event_image_id', '=', $event->id) 
+                    ->where('user_id', '=', $request->user_id) 
+                    ->get();
+
+          $event->is_user_liked = $userlike->count();
+        }
+        $response['data']             = $eventimagesdetail;*/
         return $response;        
         
     }

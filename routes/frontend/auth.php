@@ -33,6 +33,8 @@ Route::group(['namespace' => 'Auth', 'as' => 'auth.'], function () {
 
         Route::get('eventowner', [CollageController::class, 'eventowner'])->name('eventowner');
 
+        Route::get('event-gallery/{event_id}', [CollageController::class, 'event_gallery']);
+
 
         
 

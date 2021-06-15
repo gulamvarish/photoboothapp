@@ -85,4 +85,37 @@ class CollageController extends Controller
 
         
     }
+
+    	/*Event Gallery*/
+
+    public function event_gallery($eventid)
+    {  
+
+
+    	    $user_id       = Auth::id(); 
+          $PhotoEvents   = PhotoEvent::with('event_owner') 
+                        ->where('event_host', $user_id)
+                        ->where('id', $eventid)                                               
+                        ->get();
+
+                       // echo '<pre>'; print_r($PhotoEvents); echo '</pre>';
+     
+       /* $PhotoEvent    = PhotoEvent::rightJoin('event_images','event_images.event_id','=','photo_events.id')
+								          ->select('photo_events.event_title','event_images.id as imageid', 'event_images.image')
+								          ->where('event_images.type', 'collage')								          
+								         ->get();*/
+
+		if(session()->get('usertype') == 2){
+
+	          return view('frontend.eventowner.image-gallery', compact('PhotoEvents'));
+	        }else{
+
+	        	auth()->logout();
+
+	        	throw new GeneralException(__('Please Try Again'));
+	        }
+      		
+
+        
+    }
 }
